@@ -9,8 +9,10 @@ class Checklist extends StatefulWidget {
   final List<ChecklistView> checklists;
   final double width;
   final ScrollController controller;
+  final ScrollBottom scrollBottom;
+  final ScrollTop scrollTop;
 
-  const Checklist({Key key, this.checklists, this.width, this.controller}) : super(key: key);
+  const Checklist({Key key, this.checklists, this.width, this.controller, this.scrollBottom, this.scrollTop}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -20,6 +22,8 @@ class Checklist extends StatefulWidget {
 
 typedef void OnDropItem(int listIndex, int itemIndex);
 typedef void OnDropList(int listIndex);
+typedef double ScrollTop();
+typedef double ScrollBottom();
 
 class ChecklistState extends State<Checklist> {
   Widget draggedItem;
@@ -313,12 +317,15 @@ class ChecklistState extends State<Checklist> {
               checklistController.hasClients &&
               !isScrolling) {
             isScrolling = true;
+            double pos = checklistController.position.pixels;
             checklistController
                 .animateTo(checklistController.position.pixels - 5,
                     duration: new Duration(milliseconds: 10),
                     curve: Curves.ease)
                 .whenComplete(() {
               setState(() {
+                pos -= checklistController.position.pixels;
+                initialY -= pos;
                 isScrolling = false;
                 if (draggedListIndex != null) {
                   if (draggedItemIndex != null) {
@@ -347,12 +354,15 @@ class ChecklistState extends State<Checklist> {
               checklistController.hasClients &&
               !isScrolling) {
             isScrolling = true;
+            double pos = checklistController.position.pixels;
             checklistController
                 .animateTo(checklistController.position.pixels + 5,
                     duration: new Duration(milliseconds: 10),
                     curve: Curves.ease)
                 .whenComplete(() {
               setState(() {
+                pos -= checklistController.position.pixels;
+                initialY -= pos;
                 isScrolling = false;
                 if (draggedListIndex != null) {
                   if (draggedItemIndex != null) {
@@ -414,9 +424,14 @@ class ChecklistState extends State<Checklist> {
               setState(() {
                 RenderBox box = context.findRenderObject();
                 Offset pos = box.localToGlobal(opd.position);
-                Offset spawn = box.localToGlobal(Offset.zero);
-                topChecklistY = spawn.dy;
-                bottomChecklistY = spawn.dy + box.size.height;
+                if(widget.scrollTop != null && widget.scrollBottom != null){
+                  topChecklistY = widget.scrollTop();
+                  bottomChecklistY = widget.scrollBottom();
+                }else {
+                  Offset spawn = box.localToGlobal(Offset.zero);
+                  topChecklistY = spawn.dy;
+                  bottomChecklistY = spawn.dy + box.size.height;
+                }
                 offsetX = pos.dx;
                 offsetY = pos.dy;
               });
