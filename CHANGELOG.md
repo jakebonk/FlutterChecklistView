@@ -1,3 +1,3 @@
-## [0.0.1] - TODO: Add release date.
+## [0.1.3] - Added ability to block dragging on specific Checklists and ChecklistItems
 
-* TODO: Describe initial release.
+* Basic functionality to drag and drop checklist in different ChecklistViews
