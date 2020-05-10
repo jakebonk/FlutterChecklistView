@@ -32,7 +32,9 @@ This package is a custom view that allows you to be able to re-order items in a 
         subItems.add(ChecklistItemView(title: Card(child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(items[i].items[j].title),
-        )),onDropItem: (oldListIndex,oldItemIndex,listIndex, itemIndex, state){
+        )),
+        canDrag:true,
+        onDropItem: (oldListIndex,oldItemIndex,listIndex, itemIndex, state){
           //Update our local data
           setState(() {
             ChecklistItemObject object = items[oldListIndex].items[oldItemIndex];
@@ -41,7 +43,7 @@ This package is a custom view that allows you to be able to re-order items in a 
           });
         },));
       }
-      checklistsViews.add(ChecklistView(items: subItems,isOpen: items[i].isOpen,onDropChecklist:(oldIndex,newIndex,state){
+      checklistsViews.add(ChecklistView(items: subItems,isOpen: items[i].isOpen,canDrag:true,onDropChecklist:(oldIndex,newIndex,state){
         //Update our local data
         setState(() {          
           ChecklistObject object = items[oldIndex];
