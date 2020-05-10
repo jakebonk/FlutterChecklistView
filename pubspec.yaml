@@ -1,8 +1,8 @@
 name: checklist
 description: A reordable checklist in flutter
-version: 0.1.0
-author:
-homepage:
+version: 0.1.1
+author: Jake Bonk
+homepage: https://github.com/jakebonk/FlutterChecklistView
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
