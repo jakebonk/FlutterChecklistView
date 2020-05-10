@@ -15,6 +15,7 @@ class ChecklistView extends StatefulWidget {
   ChecklistListViewState checklistState;
   int index;
   bool isOpen;
+  bool canDrag;
   Widget footer;
   OnDropChecklist onDropChecklist;
   OnTapChecklist onTapChecklist;
@@ -22,7 +23,7 @@ class ChecklistView extends StatefulWidget {
   Color backgroundColor;
 
   ChecklistView(
-      {Key key, this.items, this.footer,this.title, this.checklistState, this.index, this.isOpen, this.onDropChecklist, this.onTapChecklist, this.onStartDragChecklist, this.backgroundColor})
+      {Key key, this.items, this.canDrag,this.footer,this.title, this.checklistState, this.index, this.isOpen, this.onDropChecklist, this.onTapChecklist, this.onStartDragChecklist, this.backgroundColor})
       : super(key: key);
 
   @override
@@ -110,7 +111,9 @@ class ChecklistViewState extends State<ChecklistView> with AutomaticKeepAliveCli
         },
         onTapCancel: () {},
         onLongPress: () {
-          _startDrag(widget, context);
+          if(widget.canDrag == null || widget.canDrag == true) {
+            _startDrag(widget, context);
+          }
         },
         child: Container(
             color: (widget.backgroundColor != null)?widget.backgroundColor:Colors.white,
@@ -126,6 +129,7 @@ class ChecklistViewState extends State<ChecklistView> with AutomaticKeepAliveCli
           onStartDragItem: widget.items[i].onStartDragItem,
           onDropItem: widget.items[i].onDropItem,
           onChanged: widget.items[i].onChanged,
+          canDrag: widget.items[i].canDrag,
           index: i,
           title: widget.items[i].title,
           value: widget.items[i].value,

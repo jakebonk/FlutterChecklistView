@@ -20,11 +20,12 @@ class ChecklistItemView extends StatefulWidget{
   bool value;
   OnDropItem onDropItem;
   OnTapItem onTapItem;
+  bool canDrag;
   OnChanged onChanged;
   OnStartDragItem onStartDragItem;
   Color backgroundColor;
 
-  ChecklistItemView({Key key, this.title,this.value, this.index, this.checklist, this.onDropItem, this.onTapItem, this.onStartDragItem,this.onChanged, this.backgroundColor}) : super(key: key);
+  ChecklistItemView({Key key, this.title,this.value, this.canDrag,this.index, this.checklist, this.onDropItem, this.onTapItem, this.onStartDragItem,this.onChanged, this.backgroundColor}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -120,7 +121,9 @@ class ChecklistItemViewState extends State<ChecklistItemView> with AutomaticKeep
           widget.checklist.widget.checklistState.initialY = pos.dy;
         },
         onLongPress: () {
-          _startDrag(widget, context);
+          if(widget.canDrag == null || widget.canDrag == true) {
+            _startDrag(widget, context);
+          }
         },
         child:Container(
             color: (widget.backgroundColor != null)?widget.backgroundColor:Colors.white,

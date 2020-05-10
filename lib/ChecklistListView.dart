@@ -256,6 +256,7 @@ class ChecklistListViewState extends State<ChecklistListView>  with AutomaticKee
             onTapChecklist: widget.checklists[i].onTapChecklist,
             onStartDragChecklist: widget.checklists[i].onStartDragChecklist,
             onDropChecklist: widget.checklists[i].onDropChecklist,
+            canDrag: widget.checklists[i].canDrag,
             items: widget.checklists[i].items,
             title: widget.checklists[i].title,
             footer: widget.checklists[i].footer,
