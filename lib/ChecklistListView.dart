@@ -147,13 +147,15 @@ class ChecklistListViewState extends State<ChecklistListView>  with AutomaticKee
       });
       Future.delayed(Duration(milliseconds: 50), () {
         canDrag = true;
-        RenderBox box = checklistStates[draggedListIndex]
-            .itemStates[draggedItemIndex]
-            .context
-            .findRenderObject();
-        Offset itemPos = box.localToGlobal(Offset.zero);
-        topItemY = itemPos.dy;
-        bottomItemY = itemPos.dy + box.size.height;
+        try {
+          RenderBox box = checklistStates[draggedListIndex]
+              .itemStates[draggedItemIndex]
+              .context
+              .findRenderObject();
+          Offset itemPos = box.localToGlobal(Offset.zero);
+          topItemY = itemPos.dy;
+          bottomItemY = itemPos.dy + box.size.height;
+        }catch(e){}
       });
     });
   }
@@ -182,13 +184,15 @@ class ChecklistListViewState extends State<ChecklistListView>  with AutomaticKee
       });
       Future.delayed(Duration(milliseconds: 5), () {
         canDrag = true;
-        RenderBox box = checklistStates[draggedListIndex]
-            .itemStates[draggedItemIndex]
-            .context
-            .findRenderObject();
-        Offset itemPos = box.localToGlobal(Offset.zero);
-        topItemY = itemPos.dy;
-        bottomItemY = itemPos.dy + box.size.height;
+        try {
+          RenderBox box = checklistStates[draggedListIndex]
+              .itemStates[draggedItemIndex]
+              .context
+              .findRenderObject();
+          Offset itemPos = box.localToGlobal(Offset.zero);
+          topItemY = itemPos.dy;
+          bottomItemY = itemPos.dy + box.size.height;
+        }catch(e){}
       });
     });
   }
@@ -209,11 +213,13 @@ class ChecklistListViewState extends State<ChecklistListView>  with AutomaticKee
   void waitForSync() async {
     _checkIndex().then((val) {
       setState(() {
-        RenderBox box =
-            checklistStates[draggedListIndex].context.findRenderObject();
-        Offset itemPos = box.localToGlobal(Offset.zero);
-        topListY = itemPos.dy;
-        bottomListY = itemPos.dy + box.size.height;
+        if(draggedListIndex != null && checklistStates[draggedListIndex].mounted) {
+          RenderBox box =
+          checklistStates[draggedListIndex].context.findRenderObject();
+          Offset itemPos = box.localToGlobal(Offset.zero);
+          topListY = itemPos.dy;
+          bottomListY = itemPos.dy + box.size.height;
+        }
         canDrag = true;
       });
     });
@@ -416,22 +422,27 @@ class ChecklistListViewState extends State<ChecklistListView>  with AutomaticKee
         topList = 0;
         for(var i = 0; i < checklistStates.length;i++){
           if(i <= draggedListIndex) {
-            RenderBox box = checklistStates[i]
-                .context
-                .findRenderObject();
-            bottomList += box.size.height;
-            if(i < draggedListIndex-1){
-              topList += box.size.height;
-            }else if(i < draggedListIndex){
-              topList += box.size.height/2;
+            if(checklistStates[i]
+                .mounted) {
+              RenderBox box = checklistStates[i]
+                  .context
+                  .findRenderObject();
+              bottomList += box.size.height;
+              if (i < draggedListIndex - 1) {
+                topList += box.size.height;
+              } else if (i < draggedListIndex) {
+                topList += box.size.height / 2;
+              }
             }
           }
         }
         if(draggedListIndex < checklistStates.length){
-          RenderBox box = checklistStates[draggedListIndex]
-              .context
-              .findRenderObject();
-          bottomList += box.size.height/2;
+          if(checklistStates[draggedListIndex].mounted) {
+            RenderBox box = checklistStates[draggedListIndex]
+                .context
+                .findRenderObject();
+            bottomList += box.size.height / 2;
+          }
         }
       }else{
         localPosition = null;
@@ -493,6 +504,7 @@ class ChecklistListViewState extends State<ChecklistListView>  with AutomaticKee
                   if (widget.controller != null && widget.controller.hasClients){
                     startScroll = widget.controller.position.pixels;
                   }
+                  pointer = opd;
                 });
               }
             },
@@ -539,5 +551,16 @@ class ChecklistListViewState extends State<ChecklistListView>  with AutomaticKee
               overflow: Overflow.visible,
               children: stackWidgets,
             )));
+  }
+
+  var pointer;
+
+  void run() {
+    if (pointer != null) {
+      setState(() {
+        dx = pointer.position.dx;
+        dy = pointer.position.dy;
+      });
+    }
   }
 }

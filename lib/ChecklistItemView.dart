@@ -81,6 +81,7 @@ class ChecklistItemViewState extends State<ChecklistItemView> with AutomaticKeep
         }
         widget.checklist.widget.checklistState.oldListIndex = widget.checklist.widget.index;
         widget.checklist.widget.checklistState.oldItemIndex = widget.index;
+        widget.checklist.widget.checklistState.run();
       });
     }
   }
@@ -105,20 +106,24 @@ class ChecklistItemViewState extends State<ChecklistItemView> with AutomaticKeep
           }
         },
         onTapDown: (otd) {
-          RenderBox object = context.findRenderObject();
-          Offset pos = object.localToGlobal(Offset.zero);
-          RenderBox box = widget.checklist.context.findRenderObject();
-          Offset listPos = box.localToGlobal(Offset.zero);
+          if(mounted) {
+            RenderBox object = context.findRenderObject();
+            Offset pos = object.localToGlobal(Offset.zero);
+            if(widget.checklist.mounted) {
+              RenderBox box = widget.checklist.context.findRenderObject();
+              Offset listPos = box.localToGlobal(Offset.zero);
 
-          widget.checklist.widget.checklistState.topListY = listPos.dy;
-          widget.checklist.widget.checklistState.topItemY = pos.dy;
-          widget.checklist.widget.checklistState.bottomItemY =
-              pos.dy + object.size.height;
-          widget.checklist.widget.checklistState.bottomListY =
-              listPos.dy + box.size.height;
+              widget.checklist.widget.checklistState.topListY = listPos.dy;
+              widget.checklist.widget.checklistState.topItemY = pos.dy;
+              widget.checklist.widget.checklistState.bottomItemY =
+                  pos.dy + object.size.height;
+              widget.checklist.widget.checklistState.bottomListY =
+                  listPos.dy + box.size.height;
 
-          widget.checklist.widget.checklistState.initialX = pos.dx;
-          widget.checklist.widget.checklistState.initialY = pos.dy;
+              widget.checklist.widget.checklistState.initialX = pos.dx;
+              widget.checklist.widget.checklistState.initialY = pos.dy;
+            }
+          }
         },
         onLongPress: () {
           if(widget.canDrag == null || widget.canDrag == true) {

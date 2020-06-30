@@ -61,6 +61,7 @@ class ChecklistViewState extends State<ChecklistView> with AutomaticKeepAliveCli
           widget.onStartDragChecklist(widget.index, this);
         }
         widget.checklistState.oldListIndex = widget.index;
+        widget.checklistState.run();
       });
     }
   }
