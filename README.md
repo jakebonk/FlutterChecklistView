@@ -1,3 +1,5 @@
+[![pub package](https://img.shields.io/pub/v/checklist.svg)](https://pub.dev/packages/checklist)
+
 # Flutter ChecklistView
 
 ## Getting Started
